@@ -13,9 +13,11 @@ All registered vehicles are eligible to compete for awards. **All registrants ca
 During registration, choose your primary focus:
 
 ### Form > Function
+
 Heavy focus on **style and overall look** of the vehicle stance, aesthetic modifications, presentation.
 
 ### Function > Form
+
 Priority lies **underneath the hood** improving overall vehicle performance, engine work, and mechanical upgrades.
 
 ---

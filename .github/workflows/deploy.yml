@@ -31,10 +31,13 @@ jobs:
 
       - name: Verify installations
         run: |
-          echo "Dart Sass: $(sass --version)"
           echo "Go: $(go version)"
           echo "Hugo: $(hugo version)"
           echo "Node.js: $(node --version)"
+          echo "Markdownlint: $(markdownlint-cli2 --help | head -1)"
+          echo "Cspell: $(cspell --version)"
+          echo "Taplo: $(taplo --version)"
+          echo "Lychee: $(lychee --version)"
 
       - name: Lint Markdown content
         run: markdownlint-cli2 "content/**/*.md"

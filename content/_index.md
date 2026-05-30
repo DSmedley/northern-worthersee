@@ -14,4 +14,5 @@ Whether you're looking to show off your ride, enjoy the surroundings, or simply 
   {{< eventbutton >}}
 </div>
 
+<!-- markdownlint-disable-next-line MD036 -->
 **NoWo {{< eventyear >}} · {{< eventdate >}} · Kern Pavilion, Frankenmuth, MI**
