@@ -1,0 +1,22 @@
+pre-commit:
+  commands:
+    taplo:
+      glob: "**/*.toml"
+      run: taplo check {staged_files}
+      skip:
+        - merge
+        - rebase
+
+    markdownlint:
+      glob: "**/*.md"
+      run: markdownlint-cli2 {staged_files}
+      skip:
+        - merge
+        - rebase
+
+    cspell:
+      glob: "**/*.md"
+      run: cspell --no-progress --no-summary {staged_files}
+      skip:
+        - merge
+        - rebase

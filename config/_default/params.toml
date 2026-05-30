@@ -1,0 +1,96 @@
+# -- Theme Options --
+# https://blowfish.page/docs/configuration/#theme-parameters
+
+colorScheme = "fire"
+defaultAppearance = "dark"
+autoSwitchAppearance = false
+
+Logo = "img/logo.svg"
+disableTextInHeader = true
+
+enableSearch = true
+enableCodeCopy = false
+enableStructuredBreadcrumbs = false
+
+disableImageOptimization = false
+disableImageOptimizationMD = false
+
+fingerprintAlgorithm = "sha512"
+
+highlightCurrentMenuArea = true
+
+[seo]
+
+[header]
+  layout = "fixed-fill-blur"
+
+[footer]
+  showMenu = false
+  showCopyright = true
+  showThemeAttribution = false
+  showAppearanceSwitcher = false
+  showScrollToTop = true
+
+[homepage]
+  layout = "hero"
+  homepageImage = "img/home.jpg"
+  showRecent = false
+  disableHeroImageFilter = false
+  layoutBackgroundBlur = false
+
+[Author]
+  name = "Northern Wörthersee"
+  headline = "Premier European Car Show · Frankenmuth, MI"
+  links = [
+    { facebook = "https://www.facebook.com/NorthernWorthersee" },
+    { instagram = "https://www.instagram.com/northern_worthersee" },
+    { youtube = "https://www.youtube.com/channel/UCQbFCWhxZVsiKixgkBx4q4w" },
+    { flickr = "https://www.flickr.com/photos/98711899@N04/" },
+  ]
+
+[article]
+  showDate = false
+  showAuthor = false
+  showReadingTime = false
+  showWordCount = false
+  showHero = true
+  heroStyle = "background"
+  layoutBackgroundBlur = true
+  layoutBackgroundHeaderSpace = true
+  showBreadcrumbs = true
+  showDraftLabel = true
+  showHeadingAnchors = false
+  showPagination = false
+  showTableOfContents = false
+  showTaxonomies = false
+
+[list]
+  showHero = true
+  heroStyle = "background"
+  layoutBackgroundBlur = true
+  layoutBackgroundHeaderSpace = true
+  showBreadcrumbs = false
+  showSummary = true
+  showTableOfContents = false
+  showCards = true
+  cardView = true
+  cardViewScreenWidth = false
+  groupByYear = false
+  orderByWeight = true
+
+[sitemap]
+  excludedKinds = ["taxonomy", "term"]
+
+[taxonomy]
+  showTermCount = true
+  showHero = false
+  showBreadcrumbs = false
+  showTableOfContents = false
+  cardView = false
+
+[term]
+  showHero = false
+  showBreadcrumbs = false
+  showTableOfContents = false
+  groupByYear = false
+  cardView = false

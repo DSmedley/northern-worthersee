@@ -1,0 +1,1 @@
+{{ range hugo.Data.event.schedule }}{{ if eq .id "vote-deadline" }}{{ .start }}{{ end }}{{ end }}

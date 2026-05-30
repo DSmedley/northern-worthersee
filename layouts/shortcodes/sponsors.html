@@ -1,0 +1,26 @@
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1rem; margin: 1.5rem 0;">
+
+{{ range hugo.Data.sponsors }}
+  {{ $image := resources.Get (printf "sponsors/%s" .image) }}
+
+  {{ if .link }}
+    <a href="{{ .link }}" target="_blank" rel="noopener noreferrer"
+       style="display:flex; align-items:center; justify-content:center; padding: 1.25rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; text-decoration: none;">
+  {{ else }}
+    <div style="display:flex; align-items:center; justify-content:center; padding: 1.25rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; font-weight: 600;">
+  {{ end }}
+
+  {{ if $image }}
+    <img src="{{ $image.RelPermalink }}" alt="{{ .name }}" style="max-width: 100%; height: auto;">
+  {{ else }}
+    <span style="font-weight: 600; color: inherit;">{{ .name }}</span>
+  {{ end }}
+
+  {{ if .link }}
+    </a>
+  {{ else }}
+    </div>
+  {{ end }}
+{{ end }}
+
+</div>

@@ -1,0 +1,44 @@
+{
+  "classes": [
+    {
+      "name": "Most Unique",
+      "singleAward": true,
+      "description": "Beauty is in the eye of the beholder"
+    },
+    {
+      "name": "Form > Function",
+      "singleAward": false,
+      "description": "Best overall style and visual presentation"
+    },
+    {
+      "name": "Function > Form",
+      "singleAward": false,
+      "description": "Best performance-oriented build"
+    },
+    {
+      "name": "Best Volkswagen",
+      "singleAward": false,
+      "description": "Top VW entry"
+    },
+    {
+      "name": "Best Audi",
+      "singleAward": false,
+      "description": "Top Audi entry"
+    },
+    {
+      "name": "Best Porsche",
+      "singleAward": false,
+      "description": "Top Porsche entry"
+    },
+    {
+      "name": "Best Non-VAG German",
+      "singleAward": false,
+      "description": "Top non-VAG German vehicle (BMW, Mercedes, etc.)"
+    },
+    {
+      "name": "Best Non-VAG European",
+      "singleAward": false,
+      "description": "Top European vehicle from any other marque"
+    }
+  ]
+}

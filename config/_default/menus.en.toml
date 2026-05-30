@@ -1,0 +1,34 @@
+[[main]]
+  name = "Home"
+  pageRef = "/"
+  weight = 10
+
+[[main]]
+  name = "Event"
+  pageRef = "event"
+  weight = 20
+
+[[main]]
+  name = "Gallery"
+  pageRef = "gallery"
+  weight = 30
+
+[[main]]
+  name = "Awards"
+  pageRef = "awards"
+  weight = 40
+
+[[main]]
+  name = "Sponsors"
+  pageRef = "sponsors"
+  weight = 50
+
+[[main]]
+  name = "Contact"
+  pageRef = "contact"
+  weight = 60
+
+[[main]]
+  name = "Store"
+  url = "https://northernworthersee.com/store/"
+  weight = 70

@@ -1,0 +1,133 @@
+{{ define "main" }}
+  {{ .Scratch.Set "scope" "single" }}
+
+  {{ $year := .Date.Year }}
+  {{ $allResources := resources.Match (printf "gallery/%d/*" $year) }}
+
+  {{/* Filter to image resources only */}}
+  {{ $images := slice }}
+  {{ range $allResources }}
+    {{ if strings.HasPrefix .MediaType.Type "image/" }}
+      {{ $images = $images | append . }}
+    {{ end }}
+  {{ end }}
+
+  {{ $event := site.Data.event }}
+  {{ $eventDate := time.AsTime $event.date }}
+  {{ $eventYear := $eventDate.Year }}
+
+  <article>
+    <header id="single_header" class="mt-5 max-w-prose">
+      {{ if .Params.showBreadcrumbs | default (site.Params.article.showBreadcrumbs | default false) }}
+        {{ partial "breadcrumbs.html" . }}
+      {{ end }}
+      <h1 class="mt-0 text-4xl font-extrabold text-neutral-900 dark:text-neutral">
+        {{ .Title | emojify }}
+      </h1>
+    </header>
+
+    <section class="flex flex-col max-w-full mt-0 prose dark:prose-invert">
+      <div class="min-w-0 min-h-0 max-w-fit">
+        <div class="article-content max-w-prose mb-20">
+
+          {{ if gt (len $images) 0 }}
+
+            {{/* Gallery has images — render photoswipe */}}
+            {{ with .Description }}<p>{{ . }}</p>{{ end }}
+
+            <blockquote>
+              <p>Have photos from this event? Share them at
+                <a href="mailto:northernworthersee@gmail.com">northernworthersee@gmail.com</a>
+                — we'd love to feature your shots.
+              </p>
+            </blockquote>
+
+            <hr>
+
+            {{ $id := printf "pswp-%d" $year }}
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe.css">
+            <div id="{{ $id }}" class="not-prose" style="display:flex;flex-wrap:wrap;gap:6px;margin:1.5rem 0;">
+              {{ range $images }}
+                {{ $thumb := .Resize "400x webp q85" }}
+                <a href="{{ .RelPermalink }}"
+                   data-pswp-width="{{ .Width }}"
+                   data-pswp-height="{{ .Height }}"
+                   target="_blank">
+                  <img src="{{ $thumb.RelPermalink }}"
+                       alt="NoWo {{ $year }}"
+                       style="height:200px;width:auto;object-fit:cover;cursor:pointer;border-radius:6px;"
+                       loading="lazy">
+                </a>
+              {{ end }}
+            </div>
+
+            <script type="module">
+            import PhotoSwipeLightbox from 'https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe-lightbox.esm.js';
+            const gallery = document.getElementById('{{ $id }}');
+            if (gallery) {
+              gallery.querySelectorAll('img').forEach(img => {
+                const setDims = () => {
+                  const a = img.closest('a');
+                  if (a && !a.dataset.pswpWidth && img.naturalWidth) {
+                    a.dataset.pswpWidth  = img.naturalWidth;
+                    a.dataset.pswpHeight = img.naturalHeight;
+                  }
+                };
+                img.complete ? setDims() : img.addEventListener('load', setDims);
+              });
+              const lightbox = new PhotoSwipeLightbox({
+                gallery: '#{{ $id }}',
+                children: 'a',
+                pswpModule: () => import('https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe.esm.js'),
+              });
+              lightbox.init();
+            }
+            </script>
+
+            <p><em>Photos credited to the Northern Wörthersee community.</em></p>
+
+          {{ else if eq $year $eventYear }}
+
+            {{/* Current event year, no photos yet */}}
+            {{ $dayAfter := $eventDate.AddDate 0 0 1 }}
+            <h2>Gallery Coming {{ $eventDate.Format "January 2, 2006" }}</h2>
+            <p>Photos from <strong>NoWo {{ $year }}</strong> will be posted here after the event.
+              Check back on {{ $dayAfter.Format "January 2" }}!</p>
+            <p>In the meantime, <a href="/gallery/">browse past years' galleries</a> or
+              <a href="{{ $event.registrationUrl }}">register your vehicle</a> for the {{ $year }} show.</p>
+            <hr>
+            <h3>Share Your Photos</h3>
+            <p>Attended NoWo {{ $year }}? We'd love to feature your shots in the official gallery.</p>
+            <p>Send your photos to
+              <a href="mailto:northernworthersee@gmail.com">northernworthersee@gmail.com</a>
+            </p>
+            {{ with site.Params.Author.links }}
+              <p>Stay up to date on event news and announcements:</p>
+              <ul>
+                {{ range $links := . }}
+                  {{ range $name, $url := $links }}
+                    {{ if ne $name "email" }}
+                      <li><a href="{{ $url | safeURL }}" target="_blank" rel="noopener noreferrer">{{ $name }}</a></li>
+                    {{ end }}
+                  {{ end }}
+                {{ end }}
+              </ul>
+            {{ end }}
+
+          {{ else }}
+
+            {{/* Past or future year with no photos */}}
+            <p>No photos are available for NoWo {{ $year }}.</p>
+            <p><a href="/gallery/">← Browse other years</a></p>
+
+          {{ end }}
+
+        </div>
+      </div>
+    </section>
+
+    <footer class="pt-8 max-w-prose print:hidden">
+      {{ partial "article-pagination.html" . }}
+    </footer>
+  </article>
+{{ end }}

@@ -1,0 +1,8 @@
+.article-content {
+  max-width: 100%;
+}
+
+.logo svg {
+    height: 5rem;
+    width: 15rem;
+}

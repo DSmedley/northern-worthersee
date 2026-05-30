@@ -1,0 +1,96 @@
+name: Hugo Build and Deploy
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - uses: jdx/mise-action@v4
+
+      - name: Verify installations
+        run: |
+          echo "Dart Sass: $(sass --version)"
+          echo "Go: $(go version)"
+          echo "Hugo: $(hugo version)"
+          echo "Node.js: $(node --version)"
+
+      - name: Lint Markdown content
+        run: markdownlint-cli2 "content/**/*.md"
+
+      - name: Spell check content
+        run: cspell --no-progress
+
+      - name: Validate TOML config
+        run: taplo check 'config/**/*.toml' mise.toml
+
+      - name: Configure GitHub Pages
+        id: pages
+        uses: actions/configure-pages@v6
+      
+      - name: Cache restore
+        id: cache-restore
+        uses: actions/cache/restore@v5
+        with:
+          path: ${{ runner.temp }}/hugo_cache
+          key: hugo-${{ github.run_id }}
+          restore-keys:
+            hugo-
+
+      - name: Build Hugo site
+        run: |
+          hugo build \
+            --environment production \
+            --gc \
+            --minify \
+            --baseURL "${{ steps.pages.outputs.base_url }}/" \
+            --cacheDir "${{ runner.temp }}/hugo_cache"
+      
+      - name: Check links
+        run: lychee --offline public/
+
+      - name: Cache save
+        id: cache-save
+        uses: actions/cache/save@v5
+        with:
+          path: ${{ runner.temp }}/hugo_cache
+          key: ${{ steps.cache-restore.outputs.cache-primary-key }}
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: ./public
+
+  deploy:
+    name: Deploy to GitHub Pages
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main')
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

@@ -1,0 +1,20 @@
+{{ $classes := hugo.Data.awards.classes }}
+<p>Most classes award <strong>1st, 2nd, and 3rd place</strong>. Most Unique is a single award with no runner-up placements.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Class</th>
+      <th>Places Awarded</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{ range $classes }}
+    <tr>
+      <td><strong>{{ .name }}</strong></td>
+      <td>{{ if .singleAward }}1 winner{{ else }}1st, 2nd, 3rd{{ end }}</td>
+      <td>{{ .description }}</td>
+    </tr>
+    {{ end }}
+  </tbody>
+</table>

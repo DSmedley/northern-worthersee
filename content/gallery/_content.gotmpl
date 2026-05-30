@@ -1,0 +1,69 @@
+{{ $event := hugo.Data.event }}
+{{ $eventDate := time.AsTime $event.date }}
+{{ $eventYear := printf "%d" $eventDate.Year }}
+
+{{/* Discover year subdirectories in assets/gallery/ */}}
+{{ $yearSet := dict }}
+{{ range os.ReadDir "assets/gallery" }}
+  {{ if .IsDir }}
+    {{ $year := .Name }}
+    {{ if findRE `^\d{4}$` $year }}
+      {{ $yearSet = merge $yearSet (dict $year true) }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{/* Always include the current event year (shows "check back" if no photos yet) */}}
+{{ $yearSet = merge $yearSet (dict $eventYear true) }}
+
+{{/* Sort years descending (newest first) */}}
+{{ $years := slice }}
+{{ range $year, $_ := $yearSet }}
+  {{ $years = $years | append $year }}
+{{ end }}
+{{ $years = sort $years "value" "desc" }}
+
+{{/* Generate a page for each year */}}
+{{ range $years }}
+  {{ $year := . }}
+
+  {{/* Use Jan 1 of each year so the page is always published (not a future date) */}}
+  {{ $pageDate := time.AsTime (printf "%s-01-01" $year) }}
+
+  {{/* Determine feature image: compute URL inside range while . is still the resource */}}
+  {{ $featureImage := "" }}
+
+  {{/* 1. Explicit cover.* file */}}
+  {{ range first 1 (resources.Match (printf "gallery/%s/cover.*" $year)) }}
+    {{ if strings.HasPrefix .MediaType.Type "image/" }}
+      {{ $thumb := .Resize "800x webp q85" }}
+      {{ $featureImage = $thumb.RelPermalink }}
+    {{ end }}
+  {{ end }}
+
+  {{/* 2. First image in the directory */}}
+  {{ if not $featureImage }}
+    {{ range resources.Match (printf "gallery/%s/*" $year) }}
+      {{ if and (not $featureImage) (strings.HasPrefix .MediaType.Type "image/") }}
+        {{ $thumb := .Resize "800x webp q85" }}
+        {{ $featureImage = $thumb.RelPermalink }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+
+  {{/* 3. Default for years with no photos yet */}}
+  {{ if not $featureImage }}
+    {{ with resources.Get "img/event.jpg" }}
+      {{ $featureImage = .RelPermalink }}
+    {{ end }}
+  {{ end }}
+
+  {{/* path is relative to the adapter's section (content/gallery/), not the content root */}}
+  {{ $.AddPage (dict
+    "path"  $year
+    "kind"  "page"
+    "title" (printf "NoWo %s Gallery" $year)
+    "dates" (dict "date" $pageDate)
+    "params" (dict "featureimage" $featureImage)
+  ) }}
+{{ end }}

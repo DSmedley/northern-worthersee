@@ -1,0 +1,70 @@
+{
+  "edition": "13th",
+  "date": "2026-08-22",
+  "registrationUrl": "https://northernworthersee.com/store/product/pre-registration/",
+  "location": {
+    "name": "Kern Pavilion",
+    "street": "599 Weiss St.",
+    "city": "Frankenmuth",
+    "state": "MI",
+    "zip": "48734",
+    "mapsUrl": "https://maps.google.com/?q=Kern+Pavilion+599+Weiss+St+Frankenmuth+MI+48734"
+  },
+  "schedule": [
+    {
+      "icon": "location-dot",
+      "header": "Pre-registered lot access",
+      "start": "9:30 AM",
+      "stop": "10:00 AM",
+      "description": "Show your pre-registration confirmation at the gate for early access to the show field before the public arrives."
+    },
+    {
+      "icon": "list-check",
+      "header": "General registration opens",
+      "start": "10:00 AM",
+      "stop": "12:00 PM",
+      "description": "Gates open to the public and day-of vehicle registration begins. Spectators are welcome at no charge throughout the day."
+    },
+    {
+      "icon": "comment",
+      "header": "Opening statements",
+      "start": "12:30 PM",
+      "description": "A brief welcome from the NoWo organizers to kick off the show and run through the day's agenda."
+    },
+    {
+      "id": "vote-deadline",
+      "icon": "star",
+      "header": "Vote submission deadline / Limbo begins",
+      "start": "1:00 PM",
+      "description": "Your last chance to cast votes for your favorite builds. Once the deadline passes, limbo begins while all ballots are collected."
+    },
+    {
+      "icon": "list-ol",
+      "header": "Vote tallying",
+      "start": "1:30 PM",
+      "stop": "2:00 PM",
+      "description": "Judges and volunteers count submitted ballots to determine the class winners. Sit tight results coming soon."
+    },
+    {
+      "id": "awards-ceremony",
+      "icon": "wand-magic-sparkles",
+      "header": "Awards ceremony & closing statements",
+      "start": "2:00 PM",
+      "stop": "2:30 PM",
+      "description": "Winners are announced, trophies awarded, and the show wraps up with closing remarks. Congratulations to all participants."
+    }
+  ],
+  "admission": {
+    "spectators": "Free",
+    "preRegistration": {
+      "price": "$35",
+      "includes": "free t-shirt",
+      "opensDate": "Jan 1, 2026",
+      "deadline": "Jul 22, 2026"
+    },
+    "dayOf": {
+      "price": "$40",
+      "date": "August 22"
+    }
+  }
+}

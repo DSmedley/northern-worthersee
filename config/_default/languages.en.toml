@@ -1,0 +1,11 @@
+disabled = false
+locale = "en"
+label = "English"
+weight = 1
+title = "Northern Worthersee"
+
+[params]
+displayName = "EN"
+isoCode = "en"
+rtl = false
+dateFormat = "2 January 2006"

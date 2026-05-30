@@ -1,0 +1,19 @@
+default: true
+
+# Line length — not enforced; content lines are naturally long
+MD013: false
+
+# Inline HTML — content uses <div> and Hugo shortcode wrappers
+MD033: false
+
+# Bare URLs — appear in config and content
+MD034: false
+
+# First line need not be H1 — frontmatter provides the page title
+MD041: false
+
+# Duplicate headings — long content pages repeat section names across years
+MD024: false
+
+# Blockquote blank lines — Hugo callout syntax (> [!WARNING]) uses blank lines
+MD028: false

@@ -1,0 +1,28 @@
+{{ $event := hugo.Data.event.admission }}
+<table>
+    <thead>
+        <tr>
+            <th>Category</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Spectators</td>
+            <td><strong>{{ $event.spectators }}</strong></td>
+        </tr>
+        <tr>
+            <td>Vehicle pre-registration</td>
+            <td>
+                <strong>{{ $event.preRegistration.price }}</strong>
+                includes {{ $event.preRegistration.includes }}
+                (accepted {{ $event.preRegistration.opensDate }} – {{
+                $event.preRegistration.deadline }})
+            </td>
+        </tr>
+        <tr>
+            <td>Vehicle day-of registration</td>
+            <td><strong>{{ $event.dayOf.price }}</strong> accepted on {{ $event.dayOf.date }}</td>
+        </tr>
+    </tbody>
+</table>
