@@ -1,24 +1,17 @@
 {{ with .Site.Params.Author.links }}
-  <p>Stay up to date on event news, photos, and announcements:</p>
-  <ul>
-    {{ range $links := . }}
-      {{ range $name, $url := $links }}
-        {{ $isEmail := eq $name "email" }}
-        <li>
-          <a
-            class="{{ cond $isEmail "email-link" "" }} hover:text-primary-700 dark:hover:text-primary-400"
-            href="{{ cond $isEmail "#" ($url | safeURL) }}"
-            {{ if eq $name "email" }}
-              data-email="{{ $url | base64Encode }}"
-            {{ end }}
-            target="_blank"
-            aria-label="{{ $name | title }}"
-            title="{{ $name | title }}"
-            rel="me noopener noreferrer"
-            ><span class="inline-block align-text-bottom">{{ partial "icon.html" $name }}</span> {{ $name }}</a
-          >
-        </li>
-      {{ end }}
-    {{ end }}
-  </ul>
+<p>Stay up to date on event news, photos, and announcements:</p>
+<ul>
+  {{ range $links := . }}
+  {{ range $name, $url := $links }}
+  {{ $isEmail := eq $name "email" }}
+  <li>
+    <a class="{{ cond $isEmail " email-link" "" }} hover:text-primary-700 dark:hover:text-primary-400"
+      href="{{ cond $isEmail " #" ($url | safeURL) }}" {{ if eq $name "email" }} data-email="{{ $url | base64Encode }}"
+      {{ end }} target="_blank" aria-label="{{ $name | title }}" title="{{ $name | title }}"
+      rel="me noopener noreferrer"><span class="inline-block align-text-bottom mr-1">{{ partial "icon.html" $name
+        }}</span>{{ $name }}</a>
+  </li>
+  {{ end }}
+  {{ end }}
+</ul>
 {{ end }}
