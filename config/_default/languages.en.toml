@@ -2,7 +2,7 @@ disabled = false
 locale = "en"
 label = "English"
 weight = 1
-title = "Northern Worthersee"
+title = "Northern Wörthersee"
 
 [params]
 displayName = "EN"

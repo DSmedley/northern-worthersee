@@ -14,17 +14,6 @@ import PhotoSwipeLightbox from 'https://cdn.jsdelivr.net/npm/photoswipe@5/dist/p
 
 const gallery = document.getElementById('{{ $id }}');
 if (gallery) {
-  gallery.querySelectorAll('img').forEach(img => {
-    const setDims = () => {
-      const a = img.closest('a');
-      if (a && !a.dataset.pswpWidth && img.naturalWidth) {
-        a.dataset.pswpWidth  = img.naturalWidth;
-        a.dataset.pswpHeight = img.naturalHeight;
-      }
-    };
-    img.complete ? setDims() : img.addEventListener('load', setDims);
-  });
-
   const lightbox = new PhotoSwipeLightbox({
     gallery: '#{{ $id }}',
     children: 'a',

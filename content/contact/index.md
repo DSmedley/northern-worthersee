@@ -9,7 +9,7 @@ featureimage: "img/contact.jpg"
 For all general inquiries, sponsorship opportunities, and vendor information:
 
 {{< alert icon="envelope" cardColor="#ffffff0d">}}
-  {{< email email="mailto:northernworthersee@gmail.com" text="northernworthersee@gmail.com" >}}
+  {{< email >}}
 {{< /alert >}}
 
 ---

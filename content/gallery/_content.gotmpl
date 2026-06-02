@@ -12,7 +12,7 @@
       {{ $shouldAddCheckBackPage = false }}
     {{ end }}
 
-    {{ $value := printf "> Have photos from this event? Share them at {{< email email=mailto:%s text=%s >}} we'd love to feature your shots.\n\n" $event.email $event.email }}
+    {{ $value := "> Have photos from this event? Share them at {{< email >}} we'd love to feature your shots.\n\n" }}
     {{ $value = print $value "{{< photoswipe >}}" }}
 
     {{ range $fileIndex, $file := resources.Match (printf "gallery/%s/**" $dirName) }}
@@ -24,7 +24,8 @@
           {{ $featureImage = $file.Name }}
         {{ end }}
         {{ $shouldAddPage = true }}
-        {{ $image := printf `{{< photo src="%s" alt="NoWo %s" >}}` $file.RelPermalink $dirName }}
+        {{ $thumb := $file.Resize "x400" }}
+        {{ $image := printf `{{< photo src="%s" thumb="%s" alt="NoWo %s" width="%d" height="%d" >}}` $file.RelPermalink $thumb.RelPermalink $dirName $file.Width $file.Height }}
         {{ $value = print $value $image }}
       {{ end }}
     {{ end }}
@@ -63,7 +64,7 @@
   {{ $cbValue = print $cbValue "---\n\n" }}
   {{ $cbValue = print $cbValue "### Share Your Photos\n\n" }}
   {{ $cbValue = print $cbValue (printf "Attending NoWo %s? We'd love to feature your shots in the official gallery.\n\n" $eventYear) }}
-  {{ $cbValue = print $cbValue (printf "Send your photos to {{< email email=mailto:%s text=%s >}}\n\n" $event.email $event.email) }}
+  {{ $cbValue = print $cbValue "Send your photos to {{< email >}}\n\n" }}
   {{ $cbValue = print $cbValue "{{< follow >}}" }}
 
   {{ $.AddPage (dict

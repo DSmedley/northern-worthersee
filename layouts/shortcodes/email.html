@@ -1,0 +1,10 @@
+{{ $email := .Get "email" | default (printf "mailto:%s" site.Data.event.email) }}
+{{ $text := .Get "text" | default site.Data.event.email }}
+<a
+  class="email-link"
+  href="#"
+  data-email="{{ $email | base64Encode }}"
+  {{ with .Get "subject" }}data-subject="{{ . }}"{{ end }}>
+  {{- $text -}}
+</a>
+{{- /**/ -}}
