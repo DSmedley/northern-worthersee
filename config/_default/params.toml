@@ -58,6 +58,7 @@ highlightCurrentMenuArea = true
   heroStyle = "background"
   layoutBackgroundBlur = true
   layoutBackgroundHeaderSpace = true
+  sharingLinks = ["facebook", "twitter", "reddit", "whatsapp"]
   showBreadcrumbs = true
   showDraftLabel = true
   showHeadingAnchors = false
