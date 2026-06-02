@@ -17,12 +17,12 @@
   {
     "name": "Axel Automotive",
     "link": "https://www.axelsautomotive.com/",
-    "image": "airlift-performance.svg"
+    "image": "axels-automotive.gif"
   },
   {
     "name": "Common Stance",
     "link": "https://www.facebook.com/Commonstance/",
-    "image": "airlift-performance.svg"
+    "image": "common-stance-fb.jpg"
   },
   {
     "name": "Coolwater VW Club",
@@ -32,26 +32,27 @@
   {
     "name": "Dynamic+",
     "link": "https://www.034motorsport.com/dynamic-plus-performance-software-audi-volkswagen-tuning/",
-    "image": "airlift-performance.svg"
+    "image": "dynamic-plus.png"
   },
   {
     "name": "Eurotic Detroit",
     "link": "https://www.facebook.com/EUROTICDETROIT313/",
-    "image": "airlift-performance.svg"
+    "image": "eurotic-detroit-fb.jpg"
   },
   {
     "name": "Fraser Coatings",
     "link": "https://www.facebook.com/fraser.coatings/",
-    "image": "airlift-performance.svg"
+    "image": "fraser-coatings-fb.jpg"
   },
   {
     "name": "German Plate Guy",
-    "image": "airlift-performance.svg"
+    "link": "https://www.germanplateguy.com/",
+    "image": "german-plate-guy.png"
   },
   {
     "name": "Munks",
     "link": "https://www.munks.com/",
-    "image": "airlift-performance.svg"
+    "image": "munks.jpg"
   },
   {
     "name": "Stanced Dynamics",
@@ -61,11 +62,11 @@
   {
     "name": "URO Tuning",
     "link": "https://www.urotuning.com/",
-    "image": "airlift-performance.svg"
+    "image": "uro-tuning.png"
   },
   {
     "name": "034 Motorsport",
     "link": "https://www.034motorsport.com/",
-    "image": "airlift-performance.svg"
+    "image": "034-motorsport.png"
   }
 ]
