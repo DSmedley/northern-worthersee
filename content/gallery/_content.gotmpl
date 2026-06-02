@@ -1,69 +1,85 @@
-{{ $event := hugo.Data.event }}
-{{ $eventDate := time.AsTime $event.date }}
-{{ $eventYear := printf "%d" $eventDate.Year }}
+{{ $shouldAddCheckBackPage := true }}
+{{ $eventDate := partial "event-date" . }}
+{{ $eventYear := $eventDate.Format "2006" }}
+{{ $event := site.Data.event }}
+{{ range $objectIndex, $object := sort (readDir "assets/gallery") "Name" "desc" }}
+  {{ if $object.IsDir }}
+    {{ $dirName := $object.Name }}
+    {{ warnf "Processing directory: %s" $dirName }}
+    {{ $shouldAddPage := false }}
+    {{ $featureImage := "" }}
 
-{{/* Discover year subdirectories in assets/gallery/ */}}
-{{ $yearSet := dict }}
-{{ range os.ReadDir "assets/gallery" }}
-  {{ if .IsDir }}
-    {{ $year := .Name }}
-    {{ if findRE `^\d{4}$` $year }}
-      {{ $yearSet = merge $yearSet (dict $year true) }}
+    {{ if eq $eventYear $dirName }}
+      {{ $shouldAddCheckBackPage = false }}
     {{ end }}
-  {{ end }}
-{{ end }}
 
-{{/* Always include the current event year (shows "check back" if no photos yet) */}}
-{{ $yearSet = merge $yearSet (dict $eventYear true) }}
+    {{ $value := printf "> Have photos from this event? Share them at {{< email email=mailto:%s text=%s >}} we'd love to feature your shots.\n\n" $event.email $event.email }}
+    {{ $value = print $value "{{< photoswipe >}}" }}
 
-{{/* Sort years descending (newest first) */}}
-{{ $years := slice }}
-{{ range $year, $_ := $yearSet }}
-  {{ $years = $years | append $year }}
-{{ end }}
-{{ $years = sort $years "value" "desc" }}
-
-{{/* Generate a page for each year */}}
-{{ range $years }}
-  {{ $year := . }}
-
-  {{/* Use Jan 1 of each year so the page is always published (not a future date) */}}
-  {{ $pageDate := time.AsTime (printf "%s-01-01" $year) }}
-
-  {{/* Determine feature image: compute URL inside range while . is still the resource */}}
-  {{ $featureImage := "" }}
-
-  {{/* 1. Explicit cover.* file */}}
-  {{ range first 1 (resources.Match (printf "gallery/%s/cover.*" $year)) }}
-    {{ if strings.HasPrefix .MediaType.Type "image/" }}
-      {{ $thumb := .Resize "800x webp q85" }}
-      {{ $featureImage = $thumb.RelPermalink }}
-    {{ end }}
-  {{ end }}
-
-  {{/* 2. First image in the directory */}}
-  {{ if not $featureImage }}
-    {{ range resources.Match (printf "gallery/%s/*" $year) }}
-      {{ if and (not $featureImage) (strings.HasPrefix .MediaType.Type "image/") }}
-        {{ $thumb := .Resize "800x webp q85" }}
-        {{ $featureImage = $thumb.RelPermalink }}
+    {{ range $fileIndex, $file := resources.Match (printf "gallery/%s/**" $dirName) }}
+      {{ warnf "Processing item: %s" $file.Name }}
+      {{ if eq $file.MediaType.MainType "image" }}
+        {{ warnf "Adding image: %s" $file.RelPermalink }}
+        {{ if eq $fileIndex 1 }}
+          {{ $featureImage = $file.Name }}
+        {{ end }}
+        {{ if strings.HasPrefix (path.Base $file.Name) "feature" }}
+          {{ $featureImage = $file.Name }}
+        {{ end }}
+        {{ $shouldAddPage = true }}
+        {{ $image := printf `{{< photo src="%s" alt="NoWo %s" >}}` $file.RelPermalink $dirName }}
+        {{ $value = print $value $image }}
       {{ end }}
     {{ end }}
-  {{ end }}
 
-  {{/* 3. Default for years with no photos yet */}}
-  {{ if not $featureImage }}
-    {{ with resources.Get "img/event.jpg" }}
-      {{ $featureImage = .RelPermalink }}
+    {{ $value = print $value "{{< /photoswipe >}}" }}
+
+    {{ $content := dict
+      "mediaType" "text/markdown"
+      "value" $value
+    }}
+    {{ $title := printf "NoWo %s Gallery" $dirName }}
+    {{ $description := printf "Photos from the Northern Wörthersee %s car show in Frankenmuth, MI." $dirName }}
+    {{ $params := dict
+      "featureimage" $featureImage
+    }}
+    {{ $page := dict
+      "content" $content
+      "kind" "page"
+      "path" $dirName
+      "title" $title
+      "description" $description
+      "weight" (mul (add $objectIndex 1) 10)
+      "params" $params
+    }}
+    {{ if $shouldAddPage }}
+      {{ $.AddPage $page }}
     {{ end }}
-  {{ end }}
 
-  {{/* path is relative to the adapter's section (content/gallery/), not the content root */}}
+  {{ end }}
+{{ end }}
+{{ if $shouldAddCheckBackPage }}
+
+  {{ $cbValue := printf "## Gallery Coming %s\n\n" ($eventDate.Format "January 2, 2006") }}
+  {{ $cbValue = print $cbValue (printf "Photos from **NoWo %s** will be posted here after the event. Check back after %s!\n\n" $eventYear ($eventDate.Format "January 2")) }}
+  {{ $cbValue = print $cbValue (printf "In the meantime, [browse past years' galleries](/gallery/) or [register your vehicle](%s) for the %s show.\n\n" $event.registrationUrl $eventYear) }}
+  {{ $cbValue = print $cbValue "---\n\n" }}
+  {{ $cbValue = print $cbValue "### Share Your Photos\n\n" }}
+  {{ $cbValue = print $cbValue (printf "Attending NoWo %s? We'd love to feature your shots in the official gallery.\n\n" $eventYear) }}
+  {{ $cbValue = print $cbValue (printf "Send your photos to {{< email email=mailto:%s text=%s >}}\n\n" $event.email $event.email) }}
+  {{ $cbValue = print $cbValue "{{< follow >}}" }}
+
   {{ $.AddPage (dict
-    "path"  $year
+    "content" (dict
+      "mediaType" "text/markdown"
+      "value" $cbValue)
+    "path"  $eventYear
     "kind"  "page"
-    "title" (printf "NoWo %s Gallery" $year)
-    "dates" (dict "date" $pageDate)
-    "params" (dict "featureimage" $featureImage)
+    "title" (printf "NoWo %s Gallery" $eventYear)
+    "description" (printf "Photos from the Northern Wörthersee %s car show in Frankenmuth, MI. Coming soon after the event." $eventYear)
+    "weight" 1
+    "params" (dict
+      "featureimage" "img/event.jpg"
+    )
   ) }}
 {{ end }}

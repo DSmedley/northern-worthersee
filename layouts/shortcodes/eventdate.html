@@ -1,1 +1,3 @@
-{{ partial "eventdate.html" . }}
+{{ $eventDate := partial "event-date" . }}
+{{ $eventDate = $eventDate.Format "January 02, 2006" }}
+{{ $eventDate }}

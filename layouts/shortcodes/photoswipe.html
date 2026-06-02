@@ -1,39 +1,12 @@
-{{/* Load PhotoSwipe CSS once per page */}}
 {{ if not (.Page.Scratch.Get "pswp-loaded") }}
 {{ .Page.Scratch.Set "pswp-loaded" true }}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe.css">
 {{ end }}
 
-{{/* Parse <img> tags — supports optional data-pswp-width / data-pswp-height on each img */}}
-{{ $items := slice }}
-{{ range findRESubmatch `<img\s[^>]+>` .Inner }}
-  {{ $tag := index . 0 }}
-  {{ $src := "" }}
-  {{ $alt := "" }}
-  {{ $w   := "" }}
-  {{ $h   := "" }}
-  {{ with findRESubmatch `src=["']([^"']+)["']` $tag }}{{ $src = index (index . 0) 1 }}{{ end }}
-  {{ with findRESubmatch `alt=["']([^"']+)["']` $tag }}{{ $alt = index (index . 0) 1 }}{{ end }}
-  {{ with findRESubmatch `data-pswp-width=["']([^"']+)["']`  $tag }}{{ $w = index (index . 0) 1 }}{{ end }}
-  {{ with findRESubmatch `data-pswp-height=["']([^"']+)["']` $tag }}{{ $h = index (index . 0) 1 }}{{ end }}
-  {{ if $src }}{{ $items = $items | append (dict "src" $src "alt" $alt "w" $w "h" $h) }}{{ end }}
-{{ end }}
-
 {{ $id := printf "pswp-%v" .Ordinal }}
 
 <div id="{{ $id }}" class="not-prose" style="display:flex;flex-wrap:wrap;gap:6px;margin:1.5rem 0;">
-  {{ range $items }}
-  <a href="{{ .src }}"
-     {{ with .w }}data-pswp-width="{{ . }}"{{ end }}
-     {{ with .h }}data-pswp-height="{{ . }}"{{ end }}
-     target="_blank">
-    <img
-      src="{{ .src }}"
-      alt="{{ .alt }}"
-      style="height:200px;width:auto;object-fit:cover;cursor:pointer;border-radius:6px;"
-      loading="lazy">
-  </a>
-  {{ end }}
+  {{ .Inner }}
 </div>
 
 <script type="module">
@@ -41,8 +14,6 @@ import PhotoSwipeLightbox from 'https://cdn.jsdelivr.net/npm/photoswipe@5/dist/p
 
 const gallery = document.getElementById('{{ $id }}');
 if (gallery) {
-  // Pre-populate dimensions from thumbnail naturalWidth/naturalHeight so PhotoSwipe
-  // knows the aspect ratio without an extra network request.
   gallery.querySelectorAll('img').forEach(img => {
     const setDims = () => {
       const a = img.closest('a');

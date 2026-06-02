@@ -1,4 +1,3 @@
 {{ $t := hugo.Data.event.date }}
 {{ $t = time.AsTime $t }}
-{{ $t = $t.Format "January 02, 2006" }}
-{{ $t }}
+{{ return $t }}
