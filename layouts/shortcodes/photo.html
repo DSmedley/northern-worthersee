@@ -1,16 +1,10 @@
-{{ $src   := .Get "src" }}
+{{ $src := .Get "src" }}
 {{ $thumb := .Get "thumb" | default $src }}
-{{ $alt   := .Get "alt" | default "" }}
-{{ $w     := .Get "width" }}
-{{ $h     := .Get "height" }}
+{{ $alt := .Get "alt" | default "" }}
+{{ $w := .Get "width" }}
+{{ $h := .Get "height" }}
 
-<a href="{{ $src }}"
-   {{ with $w }}data-pswp-width="{{ . }}"{{ end }}
-   {{ with $h }}data-pswp-height="{{ . }}"{{ end }}
-   target="_blank">
-  <img
-    src="{{ $thumb }}"
-    alt="{{ $alt }}"
-    style="height:200px;width:auto;object-fit:cover;cursor:pointer;border-radius:6px;"
-    loading="lazy">
+<a href="{{ $src }}" {{ with $w }}data-pswp-width="{{ . }}" {{ end }} {{ with $h }}data-pswp-height="{{ . }}" {{ end }}
+  target="_blank">
+  <img src="{{ $thumb }}" alt="{{ $alt }}" class="gallery-thumbnail" loading="lazy">
 </a>

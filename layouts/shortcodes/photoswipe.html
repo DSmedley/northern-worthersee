@@ -1,24 +1,31 @@
 {{ if not (.Page.Scratch.Get "pswp-loaded") }}
 {{ .Page.Scratch.Set "pswp-loaded" true }}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe.css">
+{{ $js := resources.Get "js/photoswipe-gallery.js" | fingerprint }}
+<script type="module" src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}"
+  crossorigin="anonymous"></script>
 {{ end }}
 
 {{ $id := printf "pswp-%v" .Ordinal }}
+{{ $sharingLinks := $.Site.Params.article.sharingLinks | default (slice "facebook" "twitter" "reddit" "whatsapp") }}
+{{ $sharingData := hugo.Data.sharing }}
 
-<div id="{{ $id }}" class="not-prose" style="display:flex;flex-wrap:wrap;gap:6px;margin:1.5rem 0;">
+{{ $urlTmplMap := dict }}
+{{ range $sharingLinks }}{{ $key := . }}{{ with index $sharingData . }}{{ $urlTmplMap = merge $urlTmplMap (dict $key
+.url) }}{{ end }}{{ end }}
+
+<div id="{{ $id }}" class="not-prose pswp-gallery" data-page-title="{{ .Page.Title }}"
+  data-sharing="{{ $urlTmplMap | jsonify }}">
   {{ .Inner }}
 </div>
 
-<script type="module">
-import PhotoSwipeLightbox from 'https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe-lightbox.esm.js';
-
-const gallery = document.getElementById('{{ $id }}');
-if (gallery) {
-  const lightbox = new PhotoSwipeLightbox({
-    gallery: '#{{ $id }}',
-    children: 'a',
-    pswpModule: () => import('https://cdn.jsdelivr.net/npm/photoswipe@5/dist/photoswipe.esm.js'),
-  });
-  lightbox.init();
-}
-</script>
+<div id="{{ $id }}-share-tmpl" class="pswp-share-tmpl" aria-hidden="true">
+  {{ range $sharingLinks }}
+  {{ $key := . }}
+  {{ with index $sharingData . }}
+  <a class="m-1 rounded bg-neutral-300 p-1.5 text-neutral-700 hover:bg-primary-500 hover:text-neutral dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-primary-400 dark:hover:text-neutral-800"
+    target="_blank" rel="noopener" data-platform="{{ $key }}" title="{{ i18n .title }}" aria-label="{{ i18n .title }}"
+    href="#">{{ partial "icon.html" .icon }}</a>
+  {{ end }}
+  {{ end }}
+</div>
