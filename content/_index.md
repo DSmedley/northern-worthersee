@@ -9,7 +9,7 @@ Frankenmuth, the "Little Bavaria" of Michigan, was founded in 1845 as a home for
 
 Whether you're looking to show off your ride, enjoy the surroundings, or simply have a good time, **come one, come all.**
 
-<div style="margin: 2rem 0; display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+<div class="mt-8 mb-8 flex gap-4 flex-wrap justify-center">
   {{< registerbutton >}}
   {{< eventbutton >}}
 </div>

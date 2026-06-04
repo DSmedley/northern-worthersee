@@ -19,7 +19,7 @@
   {{ .Inner }}
 </div>
 
-<div id="{{ $id }}-share-tmpl" class="pswp-share-tmpl" aria-hidden="true">
+<div id="{{ $id }}-share-tmpl" class="hidden" aria-hidden="true">
   {{ range $sharingLinks }}
   {{ $key := . }}
   {{ with index $sharingData . }}

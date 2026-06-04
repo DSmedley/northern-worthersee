@@ -6,5 +6,6 @@
 
 <a href="{{ $src }}" {{ with $w }}data-pswp-width="{{ . }}" {{ end }} {{ with $h }}data-pswp-height="{{ . }}" {{ end }}
   target="_blank">
-  <img src="{{ $thumb }}" alt="{{ $alt }}" class="gallery-thumbnail" loading="lazy">
+  <img src="{{ $thumb }}" alt="{{ $alt }}" class="pswp-thumbnail w-auto object-cover cursor-pointer rounded-md"
+    loading="lazy">
 </a>

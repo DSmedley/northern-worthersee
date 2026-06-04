@@ -1,18 +1,23 @@
+.sponsors-grid {
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+.sponsor-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
 .article-content {
   max-width: 100%;
 }
 
 .logo svg {
-    height: 5rem;
-    width: 15rem;
+  height: 5rem;
+  width: 15rem;
 }
 
-.gallery-thumbnail {
+.pswp-thumbnail {
   height: 200px;
-  width: auto;
-  object-fit: cover;
-  cursor: pointer;
-  border-radius: 6px;
 }
 
 .pswp-gallery {
@@ -22,14 +27,9 @@
   margin: 1.5rem 0;
 }
 
-.pswp-share-tmpl {
-  display: none;
-}
-
-/* Share panel injected into the PhotoSwipe overlay */
 .pswp__share-panel {
   position: absolute;
-  top: 60px; /* PhotoSwipe top bar height */
+  top: 60px;
   right: 8px;
   display: flex;
   flex-direction: row;

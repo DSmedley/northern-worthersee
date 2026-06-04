@@ -4,7 +4,7 @@ description: "The sponsors who make Northern Wörthersee possible. Thank you for
 featureimage: "img/sponsor.jpg"
 ---
 
-NoWo would not be possible without the generous support of our sponsors. Please support the businesses that support us.
+> NoWo would not be possible without the generous support of our sponsors. Please support the businesses that support us.
 
 ---
 
