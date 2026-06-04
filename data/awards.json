@@ -16,27 +16,27 @@
       "description": "Best performance-oriented build"
     },
     {
-      "name": "Best Volkswagen",
+      "name": "Best of Breed: Volkswagen",
       "singleAward": false,
       "description": "Top VW entry"
     },
     {
-      "name": "Best Audi",
+      "name": "Best of Breed: Audi",
       "singleAward": false,
       "description": "Top Audi entry"
     },
     {
-      "name": "Best Porsche",
+      "name": "Best of Breed: Porsche",
       "singleAward": false,
       "description": "Top Porsche entry"
     },
     {
-      "name": "Best Non-VAG German",
+      "name": "Best of Breed: BMW",
       "singleAward": false,
-      "description": "Top non-VAG German vehicle (BMW, Mercedes, etc.)"
+      "description": "Top BMW entry"
     },
     {
-      "name": "Best Non-VAG European",
+      "name": "Best of Breed: Non-VAG",
       "singleAward": false,
       "description": "Top European vehicle from any other marque"
     }
