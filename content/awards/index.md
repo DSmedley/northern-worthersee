@@ -1,7 +1,8 @@
 ---
-title: "Awards & Classifications"
-description: "NoWo class breakdown and awards, all registrants are eligible to compete and vote"
+title: "Northern Wörthersee Awards & Vehicle Classifications"
+description: "Find out how NoWo's vehicle classes and awards work, Every registered attendee can compete and vote for their favorite builds."
 featureimage: "img/awards.jpg"
+images: ["img/awards.jpg"]
 ---
 
 All registered vehicles are eligible to compete for awards. **All registrants can cast votes** to determine the winners.

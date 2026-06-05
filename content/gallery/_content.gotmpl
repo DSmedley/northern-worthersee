@@ -36,8 +36,8 @@
       "mediaType" "text/markdown"
       "value" $value
     }}
-    {{ $title := printf "NoWo %s Gallery" $dirName }}
-    {{ $description := printf "Photos from the Northern Wörthersee %s car show in Frankenmuth, MI." $dirName }}
+    {{ $title := printf "NoWo %s Photo Gallery: European Car Show Highlights" $dirName }}
+    {{ $description := printf "Browse photos from the Northern Wörthersee %s car show in Frankenmuth, Michigan. European cars, outstanding builds, and great moments from the show." $dirName }}
     {{ $params := dict
       "featureimage" $featureImage
     }}
@@ -47,6 +47,7 @@
       "path" $dirName
       "title" $title
       "description" $description
+      "images" (slice $featureImage)
       "weight" (mul (add $objectIndex 1) 10)
       "params" $params
     }}
@@ -73,8 +74,9 @@
       "value" $cbValue)
     "path"  $eventYear
     "kind"  "page"
-    "title" (printf "NoWo %s Gallery" $eventYear)
-    "description" (printf "Photos from the Northern Wörthersee %s car show in Frankenmuth, MI. Coming soon after the event." $eventYear)
+    "title" (printf "NoWo %s Photo Gallery: European Car Show Highlights" $eventYear)
+    "description" (printf "Photos from Northern Wörthersee %s will be posted here after the event. Browse past years' galleries or register your vehicle for the show." $eventYear)
+    "images" (slice "img/event.jpg")
     "weight" 1
     "params" (dict
       "featureimage" "img/event.jpg"

@@ -1,7 +1,8 @@
 ---
-title: "Northern Wörthersee"
-description: "NoWo returns to the banks of the Cass River in Frankenmuth, Michigan."
+title: "Northern Wörthersee Event: Date, Location & Details"
+description: "NoWo returns to the banks of the Cass River. Everything you need to know about NoWo and what to expect at this year's event in Frankenmuth, Michigan."
 featureimage: "img/event.jpg"
+images: ["img/event.jpg"]
 ---
 
 ## Event Overview

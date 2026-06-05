@@ -1,7 +1,8 @@
 ---
-title: "Sponsors"
-description: "The sponsors who make Northern Wörthersee possible. Thank you for your support"
+title: "Northern Wörthersee Sponsors: Partners Behind the Show"
+description: "See the businesses that make Northern Wörthersee possible each year, and learn how your brand can get involved and reach the NoWo community."
 featureimage: "img/sponsor.jpg"
+images: ["img/sponsor.jpg"]
 ---
 
 > NoWo would not be possible without the generous support of our sponsors. Please support the businesses that support us.

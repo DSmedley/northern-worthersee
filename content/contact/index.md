@@ -1,7 +1,8 @@
 ---
-title: "Contact"
-description: "Get in touch with Northern Wörthersee for sponsorship, vendor, and general inquiries"
+title: "Contact Northern Wörthersee for Sponsorship & Inquiries"
+description: "Have a question about NoWo? Reach out to the team for sponsorship, vendor inquiries, or anything else. We'd love to hear from you."
 featureimage: "img/contact.jpg"
+images: ["img/contact.jpg"]
 ---
 
 ## Get In Touch
