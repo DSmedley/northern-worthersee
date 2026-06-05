@@ -18,10 +18,10 @@
     {{ range $fileIndex, $file := resources.Match (printf "gallery/%s/**" $dirName) }}
       {{ if eq $file.MediaType.MainType "image" }}
         {{ if eq $fileIndex 1 }}
-          {{ $featureImage = strings.TrimLeft "/" $file.RelPermalink }}
+          {{ $featureImage = $file.RelPermalink }}
         {{ end }}
         {{ if strings.HasPrefix (path.Base $file.Name) "feature" }}
-          {{ $featureImage = strings.TrimLeft "/" $file.RelPermalink }}
+          {{ $featureImage = $file.RelPermalink }}
         {{ end }}
         {{ $shouldAddPage = true }}
         {{ $thumb := $file.Resize "x400" }}

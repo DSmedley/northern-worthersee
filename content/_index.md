@@ -1,5 +1,4 @@
 ---
-title: "Northern Wörthersee, Michigan's Premier European Car Show"
 description: "Join us in Frankenmuth, Michigan for Northern Wörthersee, the premier European car show in the northern United States, held each summer."
 images: ["img/home.jpg"]
 ---

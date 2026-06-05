@@ -1,5 +1,5 @@
 ---
-title: "Northern Wörthersee Sponsors: Partners Behind the Show"
+title: "Sponsors: Partners Behind the Show"
 description: "See the businesses that make Northern Wörthersee possible each year, and learn how your brand can get involved and reach the NoWo community."
 featureimage: "img/sponsor.jpg"
 images: ["img/sponsor.jpg"]

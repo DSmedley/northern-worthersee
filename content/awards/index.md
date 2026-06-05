@@ -1,5 +1,5 @@
 ---
-title: "Northern Wörthersee Awards & Vehicle Classifications"
+title: "Awards & Vehicle Classifications"
 description: "Find out how NoWo's vehicle classes and awards work, Every registered attendee can compete and vote for their favorite builds."
 featureimage: "img/awards.jpg"
 images: ["img/awards.jpg"]
