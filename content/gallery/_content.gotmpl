@@ -40,7 +40,7 @@
     {{ $description := printf "Browse photos from the Northern Wörthersee %s car show in Frankenmuth, Michigan. European cars, outstanding builds, and great moments from the show." $dirName }}
     {{ $params := dict
       "featureimage" $featureImage
-      "images" (slice $featureImage)
+      "images" (slice (strings.TrimLeft "/" $featureImage))
       "description" $description
     }}
     {{ $page := dict
