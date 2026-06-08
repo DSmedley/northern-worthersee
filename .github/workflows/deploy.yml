@@ -41,14 +41,8 @@ jobs:
           echo "Taplo: $(taplo --version)"
           echo "Lychee: $(lychee --version)"
 
-      - name: Lint Markdown content
-        run: markdownlint-cli2 "content/**/*.md"
-
-      - name: Spell check content
-        run: cspell --no-progress
-
-      - name: Validate TOML config
-        run: taplo check 'config/**/*.toml' mise.toml
+      - name: Run checks
+        run: mise run check
 
       - name: Configure GitHub Pages
         id: pages
@@ -73,7 +67,7 @@ jobs:
             --cacheDir "${{ runner.temp }}/hugo_cache"
       
       - name: Check links
-        run: lychee --offline public/
+        run: mise run lint-links
 
       - name: Cache save
         id: cache-save

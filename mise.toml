@@ -20,15 +20,19 @@ run = "lefthook install"
 description = "Run all validations (markdown, spelling, TOML)"
 run = [
   "markdownlint-cli2 'content/**/*.md'",
-  "cspell --no-progress 'content/**/*.md'",
+  "cspell --no-progress",
   "taplo check 'config/**/*.toml' mise.toml",
 ]
+
+[tasks.lint-links]
+description = "Check for broken links in the built site"
+run = "lychee --offline public/"
 
 [tasks.check-links]
 description = "Build the site and check for broken links"
 run = [
   "hugo --minify",
-  "lychee --offline public/",
+  "mise run lint-links",
 ]
 
 [hooks]

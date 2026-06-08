@@ -1,22 +1,12 @@
 pre-commit:
   commands:
-    taplo:
-      glob: "**/*.toml"
-      run: taplo check {staged_files}
+    check:
+      run: mise run check
       skip:
         - merge
         - rebase
-
-    markdownlint:
-      glob: "**/*.md"
-      run: markdownlint-cli2 {staged_files}
-      skip:
-        - merge
-        - rebase
-
-    cspell:
-      glob: "**/*.md"
-      run: cspell --no-progress --no-summary {staged_files}
+    check-links:
+      run: mise run check-links
       skip:
         - merge
         - rebase

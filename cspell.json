@@ -2,10 +2,20 @@
   "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/packages/cspell-types/cspell.schema.json",
   "version": "0.2",
   "language": "en",
-  "files": ["content/**/*.md"],
-  "ignorePaths": ["node_modules", "public", "resources", "themes"],
+  "files": [
+    "content/**/*.md",
+    "data/**/*.json",
+    "layouts/**/*.html"
+  ],
+  "ignorePaths": [
+    "node_modules",
+    "public",
+    "resources",
+    "themes"
+  ],
   "ignoreRegExpList": [
-    "\\{\\{[<%][^}]*[>%]\\}\\}"
+    "\\{\\{.*?\\}\\}",
+    "[^\\s\"'<>()\\[\\]]*\\.(?:png|jpg|jpeg|gif|svg|webp|avif|pdf|ico|woff2?|ttf)"
   ],
   "words": [
     "NoWo",
@@ -18,5 +28,11 @@
     "featureimage",
     "showBreadcrumbs",
     "Cass",
+    "Coolwater",
+    "Eurotic",
+    "Munks",
+    "Stanced",
+    "Motorsport",
+    "pswp"
   ]
 }
