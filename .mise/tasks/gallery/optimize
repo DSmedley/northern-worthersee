@@ -1,0 +1,171 @@
+#!/usr/bin/env node
+//MISE description="Resize & re-encode gallery images to WebP in place (replacing the originals) and write a report"
+//MISE outputs=[".gallery-reports/optimization.md"]
+//USAGE arg "[files]" var=#true help="Images to optimize (default: the entire gallery)"
+
+// Optimize gallery images in place: resize (keeping aspect ratio) and re-encode
+// each image to WebP, replacing the original file (e.g. photo.jpg -> photo.webp,
+// removing photo.jpg).
+//
+// The subset form is used by the pre-commit hook so commits stay in small
+// batches. Duplicate detection lives in `mise run gallery:duplicates`.
+
+import { readFile, writeFile, stat, rename, unlink, mkdir } from "node:fs/promises";
+import path from "node:path";
+import sharp from "sharp";
+import { SRC_ROOT, walk, resolveGalleryArgs, humanSize } from "./_lib.mjs";
+
+const REPORT_DIR = ".gallery-reports";
+const REPORT_PATH = `${REPORT_DIR}/optimization.md`;
+
+const FORMAT = "webp"; // well-supported, Hugo-native, strong compression
+const OUT_EXT = ".webp";
+const QUALITY = 80; // visually lossless-ish for photos, big size win
+const MAX_EDGE = 2048; // common web/lightbox max on the longest side; never upscale
+
+// In-place target: same directory and base name, WebP extension.
+function outputPath(src) {
+  const parsed = path.parse(src);
+  return path.join(parsed.dir, parsed.name + OUT_EXT);
+}
+
+async function main() {
+  const args = process.argv.slice(2);
+  const mode = args.length === 0 ? "full" : "subset";
+  const files = mode === "full" ? (await walk(SRC_ROOT)).sort() : resolveGalleryArgs(args);
+
+  if (files.length === 0) {
+    console.log("No gallery images to optimize.");
+    return;
+  }
+
+  console.log(
+    `Optimizing ${files.length} image(s) [${mode} mode] in place ` +
+    `(${FORMAT}, max ${MAX_EDGE}px, q${QUALITY})\n`,
+  );
+
+  // per-directory tallies of converted images
+  const perDir = new Map();
+  let totalSrc = 0;
+  let totalOut = 0;
+  let optimized = 0;
+  let skipped = 0;
+  let failures = 0;
+
+  for (const src of files) {
+    const out = outputPath(src);
+    const dirKey = path.dirname(path.relative(SRC_ROOT, src)).split(path.sep).join("/");
+
+    try {
+      const input = await readFile(src);
+      const meta = await sharp(input).metadata();
+
+      // Idempotent re-runs: skip images that are already WebP and within bounds
+      // so repeated full runs don't re-compress (and slowly degrade) them.
+      const alreadyOptimized =
+        path.extname(src).toLowerCase() === OUT_EXT &&
+        meta.width &&
+        meta.height &&
+        Math.max(meta.width, meta.height) <= MAX_EDGE;
+
+      if (alreadyOptimized) {
+        skipped++;
+        process.stdout.write(`  – ${src} (already optimized, skipped)\n`);
+        continue;
+      }
+
+      // Write to a temp file first, then atomically move it into place, so a
+      // failure mid-encode can never truncate the original image.
+      const tmp = out + ".tmp-optimizing";
+      await sharp(input)
+        .rotate() // respect EXIF orientation before stripping metadata
+        .resize({
+          width: MAX_EDGE,
+          height: MAX_EDGE,
+          fit: "inside", // preserve aspect ratio
+          withoutEnlargement: true, // never upscale smaller images
+        })
+        .toFormat(FORMAT, { quality: QUALITY })
+        .toFile(tmp);
+      await rename(tmp, out);
+      if (out !== src) await unlink(src); // remove the original (e.g. the .jpg)
+
+      const srcSize = input.length;
+      const outSize = (await stat(out)).size;
+      totalSrc += srcSize;
+      totalOut += outSize;
+
+      const tally = perDir.get(dirKey) ?? { count: 0, src: 0, out: 0 };
+      tally.count++;
+      tally.src += srcSize;
+      tally.out += outSize;
+      perDir.set(dirKey, tally);
+
+      optimized++;
+      process.stdout.write(
+        `  ✓ ${src} → ${out}  (${humanSize(srcSize)} → ${humanSize(outSize)})\n`,
+      );
+    } catch (err) {
+      failures++;
+      process.stdout.write(`  ✗ ${src}: ${err.message}\n`);
+    }
+  }
+
+  await writeReport({ mode, files, perDir, totalSrc, totalOut, optimized, skipped, failures });
+
+  // ---- Console summary ----
+  const saved = totalSrc - totalOut;
+  const pct = totalSrc > 0 ? ((saved / totalSrc) * 100).toFixed(1) : "0.0";
+  console.log("\nDone.");
+  console.log(`  Optimized:  ${optimized}`);
+  if (skipped > 0) console.log(`  Skipped:    ${skipped} (already optimized)`);
+  if (failures > 0) console.log(`  Failures:   ${failures}`);
+  console.log(`  Size:       ${humanSize(totalSrc)} → ${humanSize(totalOut)} (saved ${humanSize(saved)}, ${pct}%)`);
+  console.log(`  Report:     ${REPORT_PATH}`);
+
+  if (failures > 0) process.exitCode = 1;
+}
+
+async function writeReport({ mode, files, perDir, totalSrc, totalOut, optimized, skipped, failures }) {
+  const saved = totalSrc - totalOut;
+  const pct = totalSrc > 0 ? ((saved / totalSrc) * 100).toFixed(1) : "0.0";
+
+  const lines = [];
+  lines.push("# Gallery Optimization Report");
+  lines.push("");
+  lines.push(`- Generated: ${new Date().toISOString()}`);
+  lines.push(`- Scope: ${mode === "full" ? "entire gallery" : "subset (" + files.length + " file(s))"}`);
+  lines.push(`- Settings: ${FORMAT}, max ${MAX_EDGE}px longest edge, quality ${QUALITY}, in-place`);
+  lines.push("");
+  lines.push("## Summary");
+  lines.push("");
+  lines.push(`- Images optimized: ${optimized}`);
+  if (skipped > 0) lines.push(`- Skipped (already optimized): ${skipped}`);
+  if (failures > 0) lines.push(`- Failures: ${failures}`);
+  lines.push(`- Source size: ${humanSize(totalSrc)}`);
+  lines.push(`- Optimized size: ${humanSize(totalOut)}`);
+  lines.push(`- Saved: ${humanSize(saved)} (${pct}%)`);
+  lines.push("");
+
+  lines.push("## Images optimized per directory");
+  lines.push("");
+  lines.push("| Directory | Images | Source | Optimized | Saved |");
+  lines.push("| --- | ---: | ---: | ---: | ---: |");
+  for (const dir of [...perDir.keys()].sort()) {
+    const t = perDir.get(dir);
+    const dirSaved = t.src - t.out;
+    const dirPct = t.src > 0 ? ((dirSaved / t.src) * 100).toFixed(1) : "0.0";
+    lines.push(
+      `| ${dir || "."} | ${t.count} | ${humanSize(t.src)} | ${humanSize(t.out)} | ${humanSize(dirSaved)} (${dirPct}%) |`,
+    );
+  }
+  lines.push("");
+
+  await mkdir(REPORT_DIR, { recursive: true });
+  await writeFile(REPORT_PATH, lines.join("\n"));
+}
+
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#MISE description="Install the tool versions pinned in mise.toml"
+set -euo pipefail
+
+if [ "$(mise ls --local --missing --json)" = "{}" ]; then
+  echo "all pinned tools installed"
+else
+  mise install
+fi

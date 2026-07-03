@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#MISE description="Install git hooks"
+#MISE depends=["sync:mise"]
+#MISE sources=["lefthook.yml"]
+#MISE outputs=[".git/info/lefthook.checksum"]
+set -euo pipefail
+
+lefthook install

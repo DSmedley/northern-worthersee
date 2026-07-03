@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+#MISE description="Run Lighthouse checks (performance & accessibility budgets) across all pages using Unlighthouse"
+#MISE alias="check:lh"
+set -euo pipefail
+
+CHROME=$(find ~/.cache/ms-playwright -name "chrome" -type f 2>/dev/null | head -1)
+if [ -z "$CHROME" ]; then
+  echo "ERROR: Playwright browsers not installed. Run: mise run sync:browsers" >&2
+  exit 1
+fi
+export PUPPETEER_EXECUTABLE_PATH="$CHROME"
+hugo server --port 1314 --disableFastRender > /dev/null 2>&1 &
+SERVER_PID=$!
+trap 'kill $SERVER_PID 2>/dev/null' EXIT
+until curl -sf http://localhost:1314 > /dev/null; do sleep 0.5; done
+npx unlighthouse-ci --site http://localhost:1314 --disable-robots-txt

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#MISE description="Install npm dependencies"
+#MISE depends=["sync:mise"]
+#MISE sources=["package.json", "package-lock.json"]
+#MISE outputs=["node_modules/.package-lock.json"]
+set -euo pipefail
+
+npm install

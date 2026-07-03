@@ -1,18 +1,50 @@
 pre-commit:
   commands:
-    check:
-      run: mise run check
+    check-markdown:
+      glob:
+        - "content/*.md"
+        - "content/**/*.md"
+      run: mise run check:markdown {staged_files}
+      skip:
+        - merge
+        - rebase
+    check-spelling:
+      glob:
+        - "content/*.md"
+        - "content/**/*.md"
+        - "data/*.json"
+        - "data/**/*.json"
+        - "layouts/*.html"
+        - "layouts/**/*.html"
+      run: mise run check:spelling {staged_files}
+      skip:
+        - merge
+        - rebase
+    check-toml:
+      glob:
+        - "config/*.toml"
+        - "config/**/*.toml"
+        - "mise.toml"
+      run: mise run check:toml {staged_files}
       skip:
         - merge
         - rebase
     check-links:
-      run: mise run check-links
+      run: mise run check:links
       skip:
         - merge
         - rebase
-    optimize-gallery:
+    gallery-optimize:
+      priority: 1
       glob: "assets/gallery/**/*.{jpg,jpeg,png,gif,webp,avif,tif,tiff}"
-      run: mise run optimize-gallery {staged_files} && git add assets/gallery
+      run: mise run gallery:optimize {staged_files} && git add assets/gallery
+      skip:
+        - merge
+        - rebase
+    gallery-duplicates:
+      priority: 2
+      glob: "assets/gallery/**/*.{jpg,jpeg,png,gif,webp,avif,tif,tiff}"
+      run: mise run gallery:duplicates {staged_files}
       skip:
         - merge
         - rebase

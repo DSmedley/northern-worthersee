@@ -12,10 +12,12 @@ Static site for [Northern Wörthersee](https://northernworthersee.com), an annua
 ```sh
 git clone --recurse-submodules https://github.com/your-org/northern-worthersee.git
 cd northern-worthersee
-mise install
-mise run setup      # installs git hooks via lefthook
-npm ci              # installs Playwright (for e2e tests)
+mise trust
+mise run sync                 # tools, npm deps, Playwright browsers, git hooks, git-lfs
+npm run install:browsers      # once per machine: OS-level browser libraries (needs sudo)
 ```
+
+Entering the project directory (with `mise activate` in your shell) runs `mise run sync` automatically, so the repo stays in sync after pulls that change `package-lock.json` or tool versions. The individual `sync:*` tasks (`sync:mise`, `sync:npm`, `sync:browsers`, `sync:git-lfs`, `sync:lefthook`) can also be run on their own.
 
 > [!IMPORTANT]
 > The `--recurse-submodules` flag is required. The Blowfish theme lives at `themes/blowfish/` as a git submodule. If you forgot it, run `git submodule update --init --recursive` after cloning.
@@ -129,7 +131,8 @@ The following checks run automatically as pre-commit hooks and in CI:
 
 ```sh
 mise run check          # markdown lint, spell check, TOML validation
-mise run check-links    # build site and check for broken links (offline)
+                        # (or individually: check:markdown, check:spelling, check:toml)
+mise run check:links    # build site and check for broken links (offline)
 ```
 
 Spell check uses [cspell](https://cspell.org). If you need to add a word to the allowed list, see [cspell.json](cspell.json).

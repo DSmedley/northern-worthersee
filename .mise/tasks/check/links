@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+#MISE description="Check for broken links in the generated site. If CI environment variable is true it expects the hugo site to be built before running the check."
+#USAGE flag "--external" help="Also check external links over the network (default: offline, internal links only)"
+set -euo pipefail
+
+offline=(--offline)
+[ "${usage_external:-false}" = "true" ] && offline=()
+
+if [ -z "${CI:-}" ]; then
+  hugo --minify --baseURL '/' --cleanDestinationDir
+  lychee "${offline[@]}" --root-dir "$PWD/public" public/
+else
+  base=$(sed -n 's/^baseURL *= *"\(.*\)"/\1/p' config/production/hugo.toml)
+  base="${base%/}"
+  host_and_path="${base#*://}"
+  subpath="${host_and_path#*/}"
+  [ "$subpath" = "$host_and_path" ] && subpath=""
+
+  remaps=(--remap "^${base}(/.*)?\$ file://$PWD/public\$1")
+  if [ -n "$subpath" ]; then
+    remaps+=(--remap "^file://$PWD/public/${subpath}(/.*)?\$ file://$PWD/public\$1")
+  fi
+  lychee "${offline[@]}" --root-dir "$PWD/public" "${remaps[@]}" public/
+fi

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+#MISE description="Install Playwright browsers (used by e2e tests, pa11y-ci, and unlighthouse)"
+#MISE depends=["sync:npm"]
+#USAGE flag "-f --force" help="Reinstall the browsers even if they appear to be present"
+set -euo pipefail
+
+check='const fs = require("fs");
+try {
+  const pw = require("playwright");
+  process.exit(["chromium", "firefox"].every(b => fs.existsSync(pw[b].executablePath())) ? 0 : 1);
+} catch { process.exit(1); }'
+if [ "${usage_force:-false}" != "true" ] && node -e "$check" 2>/dev/null; then
+  echo "Playwright browsers present"
+else
+  npx playwright install chromium firefox
+fi

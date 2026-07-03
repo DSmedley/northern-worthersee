@@ -1,0 +1,182 @@
+#!/usr/bin/env node
+//MISE description="Detect duplicate gallery images with a perceptual hash; fails when duplicates are found"
+//MISE alias="gallery:dupes"
+//MISE outputs=[".gallery-reports/duplicates.md"]
+//USAGE flag "--threshold <distance>" default="7" help="Max perceptual-hash distance treated as a duplicate (re-encodes score 0–6, unrelated photos ~30)"
+//USAGE arg "[files]" var=#true help="Images to check against the whole gallery (default: check everything)"
+
+// Duplicate detection for gallery images. Every gallery image is hashed with
+// a perceptual hash (dHash), so re-saves at different sizes or compression
+// levels are still caught — not just byte-for-byte copies.
+//
+// Only .webp files are considered: gallery:optimize converts everything to
+// WebP, so in the pre-commit hook (where this runs after the optimizer) the
+// gallery contains nothing else, and skipping other extensions means the two
+// tasks can never race over an original that is being replaced.
+//
+// False positives (distinct photos that look near-identical, e.g. burst
+// shots) can be ignored via assets/gallery/.duplicates.json.
+//
+// The subset form is used by the pre-commit hook: newly added photos are
+// compared against every existing gallery image, and the commit is blocked
+// if one is a duplicate. Exits 1 when duplicates are found.
+
+import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { existsSync } from "node:fs";
+import path from "node:path";
+import {
+  SRC_ROOT, walk, resolveGalleryArgs, dhash, findDuplicateGroups, DUPLICATE_THRESHOLD,
+} from "./_lib.mjs";
+
+const REPORT_DIR = ".gallery-reports";
+const REPORT_PATH = `${REPORT_DIR}/duplicates.md`;
+const IGNORE_CONFIG = `${SRC_ROOT}/.duplicates.json`;
+
+// The threshold default comes from the USAGE spec via mise (usage_threshold);
+// the constant is the fallback when the script is run directly. An explicit
+// --threshold in argv (forwarded raw by mise) wins either way.
+function parseArgs(argv) {
+  let threshold = Number(process.env.usage_threshold ?? DUPLICATE_THRESHOLD);
+  const files = [];
+  for (let i = 0; i < argv.length; i++) {
+    if (argv[i] === "--threshold") {
+      threshold = Number(argv[++i]);
+    } else {
+      files.push(argv[i]);
+    }
+  }
+  if (!Number.isInteger(threshold) || threshold < 0 || threshold > 64) {
+    console.error("Invalid --threshold: expected an integer 0-64");
+    process.exit(2);
+  }
+  return { threshold, files };
+}
+
+// Map any resolved target to the .webp the optimizer produced for it (a staged
+// photo.jpg has become photo.webp by the time this runs in the hook).
+function toWebpTargets(files) {
+  const webp = files.map((f) => {
+    if (f.endsWith(".webp")) return f;
+    const parsed = path.parse(f);
+    return path.posix.join(parsed.dir, parsed.name + ".webp");
+  });
+  return [...new Set(webp)].filter((f) => existsSync(f)).sort();
+}
+
+// A detected group is ignored only when all of its files are covered by a
+// single ignore entry: if a new duplicate joins an ignored group, the grown
+// group no longer matches and resurfaces.
+async function loadIgnoreGroups() {
+  if (!existsSync(IGNORE_CONFIG)) return [];
+  const config = JSON.parse(await readFile(IGNORE_CONFIG, "utf8"));
+  return (config.ignore ?? []).map((entry) => new Set(entry));
+}
+
+async function main() {
+  const { threshold, files } = parseArgs(process.argv.slice(2));
+  const targets = toWebpTargets(resolveGalleryArgs(files));
+  const mode = files.length === 0 ? "full" : "subset";
+
+  if (mode === "subset" && targets.length === 0) {
+    console.log("No gallery images to check.");
+    return;
+  }
+
+  // Hash the whole gallery in both modes: subset targets must be compared
+  // against every other image, not just against each other.
+  const all = (await walk(SRC_ROOT)).filter((f) => f.endsWith(".webp")).sort();
+  console.log(
+    mode === "full"
+      ? `Checking ${all.length} gallery image(s) for duplicates (threshold ${threshold})…`
+      : `Checking ${targets.length} image(s) against ${all.length} gallery image(s) (threshold ${threshold})…`,
+  );
+
+  const entries = [];
+  let failures = 0;
+  for (const file of all) {
+    try {
+      entries.push({ ref: file, hash: await dhash(await readFile(file)) });
+    } catch (err) {
+      failures++;
+      process.stdout.write(`  ✗ ${file}: ${err.message}\n`);
+    }
+  }
+
+  let groups = findDuplicateGroups(entries, threshold);
+  if (mode === "subset") {
+    const targetSet = new Set(targets);
+    groups = groups.filter((g) => g.files.some((f) => targetSet.has(f)));
+  }
+
+  const ignoreGroups = await loadIgnoreGroups();
+  const ignored = groups.filter((g) =>
+    ignoreGroups.some((entry) => g.files.every((f) => entry.has(f))),
+  );
+  groups = groups.filter((g) => !ignored.includes(g));
+
+  await writeReport({ mode, targets, total: all.length, groups, ignored, threshold });
+
+  if (ignored.length > 0) {
+    console.log(`${ignored.length} group(s) ignored via ${IGNORE_CONFIG}.`);
+  }
+  if (groups.length === 0) {
+    console.log("No duplicates found.");
+  } else {
+    console.log(`\n${groups.length} duplicate group(s) found (see ${REPORT_PATH}):`);
+    for (const group of groups) {
+      console.log(`  • [dist ${group.maxDistance}] ${group.files.join("  ==  ")}`);
+    }
+  }
+
+  if (groups.length > 0 || failures > 0) process.exitCode = 1;
+}
+
+async function writeReport({ mode, targets, total, groups, ignored, threshold }) {
+  const lines = [];
+  lines.push("# Gallery Duplicates Report");
+  lines.push("");
+  lines.push(`- Generated: ${new Date().toISOString()}`);
+  lines.push(
+    `- Scope: ${mode === "full"
+      ? `entire gallery (${total} images)`
+      : `${targets.length} file(s) checked against the entire gallery (${total} images)`}`,
+  );
+  lines.push(`- Duplicate groups: ${groups.length}`);
+  lines.push(`- Ignored groups (via ${IGNORE_CONFIG}): ${ignored.length}`);
+  lines.push("");
+  lines.push("## Duplicate images");
+  lines.push("");
+  if (groups.length === 0) {
+    lines.push("No duplicate images found.");
+  } else {
+    lines.push(
+      `The following groups contain visually identical or near-identical images ` +
+      `(perceptual-hash distance <= ${threshold}; candidates for removal). ` +
+      `False positives can be listed in ${IGNORE_CONFIG}:`,
+    );
+    lines.push("");
+    groups.forEach((group, i) => {
+      lines.push(`### Group ${i + 1} (distance ${group.maxDistance})`);
+      for (const f of group.files) lines.push(`- ${f}`);
+      lines.push("");
+    });
+  }
+  if (ignored.length > 0) {
+    lines.push("## Ignored groups");
+    lines.push("");
+    ignored.forEach((group, i) => {
+      lines.push(`### Ignored ${i + 1} (distance ${group.maxDistance})`);
+      for (const f of group.files) lines.push(`- ${f}`);
+      lines.push("");
+    });
+  }
+  lines.push("");
+
+  await mkdir(REPORT_DIR, { recursive: true });
+  await writeFile(REPORT_PATH, lines.join("\n"));
+}
+
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

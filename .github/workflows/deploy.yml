@@ -67,7 +67,7 @@ jobs:
             --cacheDir "${{ runner.temp }}/hugo_cache"
       
       - name: Check links
-        run: mise run lint-links
+        run: mise run check:links
 
       - name: Cache save
         id: cache-save
@@ -110,6 +110,36 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
+
+  # Lighthouse (mise run check:lighthouse) is intentionally local-only: its
+  # performance scores depend on machine load, which makes the budget flaky on
+  # shared CI runners. pa11y results are DOM-based and deterministic, so they
+  # do belong here.
+  a11y:
+    name: Accessibility
+    runs-on: ubuntu-latest
+    # The site currently has known accessibility issues (theme-level); this
+    # job is non-blocking until they are fixed — then remove continue-on-error.
+    continue-on-error: true
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          submodules: recursive
+          fetch-depth: 0
+          lfs: true
+
+      - name: Install packages
+        uses: jdx/mise-action@v4
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run accessibility checks
+        run: mise run check:a11y
 
   deploy:
     name: Deploy to GitHub Pages

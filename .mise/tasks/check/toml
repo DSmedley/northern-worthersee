@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+#MISE description="Validate TOML config files"
+#USAGE flag "--fix" help="Format the files with taplo fmt before validating"
+#USAGE arg "[files]" var=#true help="TOML files to validate (default: config/**/*.toml and mise.toml)"
+set -euo pipefail
+
+if [ -n "${usage_files:-}" ]; then
+  eval "files=(${usage_files})"
+else
+  files=('config/**/*.toml' mise.toml)
+fi
+
+[ "${usage_fix:-false}" = "true" ] && taplo fmt "${files[@]}"
+taplo check "${files[@]}"

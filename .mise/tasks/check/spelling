@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+#MISE description="Spell-check site content"
+#MISE alias="check:spell"
+#USAGE arg "[files]" var=#true help="Files to spell-check (default: the file set in cspell.json)"
+set -euo pipefail
+
+if [ -n "${usage_files:-}" ]; then
+  eval "files=(${usage_files})"
+  cspell --no-progress "${files[@]}"
+else
+  cspell --no-progress
+fi

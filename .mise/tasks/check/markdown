@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+#MISE description="Lint markdown content"
+#MISE alias="check:md"
+#USAGE flag "--fix" help="Automatically fix fixable lint issues in place"
+#USAGE arg "[files]" var=#true default="content/**/*.md" help="Markdown files to lint"
+set -euo pipefail
+
+flags=()
+[ "${usage_fix:-false}" = "true" ] && flags+=(--fix)
+
+eval "files=(${usage_files:-'content/**/*.md'})"
+markdownlint-cli2 "${flags[@]}" "${files[@]}"

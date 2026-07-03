@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#MISE description="Set up git-lfs so binary assets (images) check out properly"
+#MISE depends=["sync:mise"]
+set -euo pipefail
+
+if git config --get filter.lfs.smudge > /dev/null && grep -q 'git lfs' .git/hooks/pre-push 2>/dev/null; then
+  echo "git-lfs already set up"
+else
+  git lfs install
+fi
