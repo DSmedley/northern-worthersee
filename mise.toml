@@ -39,9 +39,45 @@ run = "lychee --offline public/"
 [tasks.check-links]
 description = "Build the site and check for broken links"
 run = [
-  "hugo --minify",
+  "hugo --minify --baseURL '/'",
   "mise run lint-links",
 ]
+
+[tasks.check-a11y]
+description = "Check accessibility across all pages using pa11y-ci"
+run = """
+#!/usr/bin/env bash
+set -euo pipefail
+CHROME=$(find ~/.cache/ms-playwright -name "chrome" -type f 2>/dev/null | head -1)
+if [ -z "$CHROME" ]; then
+  echo "ERROR: Playwright browsers not installed. Run: npm run install:browsers" >&2
+  exit 1
+fi
+export PUPPETEER_EXECUTABLE_PATH="$CHROME"
+hugo server --port 1314 --disableFastRender > /dev/null 2>&1 &
+SERVER_PID=$!
+trap 'kill $SERVER_PID 2>/dev/null' EXIT
+until curl -sf http://localhost:1314 > /dev/null; do sleep 0.5; done
+npx pa11y-ci --sitemap http://localhost:1314/sitemap.xml
+"""
+
+[tasks.check-lighthouse]
+description = "Run Lighthouse checks across all pages using Unlighthouse"
+run = """
+#!/usr/bin/env bash
+set -euo pipefail
+CHROME=$(find ~/.cache/ms-playwright -name "chrome" -type f 2>/dev/null | head -1)
+if [ -z "$CHROME" ]; then
+  echo "ERROR: Playwright browsers not installed. Run: npm run install:browsers" >&2
+  exit 1
+fi
+export PUPPETEER_EXECUTABLE_PATH="$CHROME"
+hugo server --port 1314 --disableFastRender > /dev/null 2>&1 &
+SERVER_PID=$!
+trap 'kill $SERVER_PID 2>/dev/null' EXIT
+until curl -sf http://localhost:1314 > /dev/null; do sleep 0.5; done
+npx unlighthouse-ci --site http://localhost:1314 --disable-robots-txt
+"""
 
 [hooks]
 postinstall = ["echo 'Running mise setup'", { task = "setup" }]

@@ -17,11 +17,10 @@ test.describe('gallery page', () => {
     await expect(page.getByRole('heading', { name: /NoWo 2026/i })).toBeVisible();
   });
 
+  // Past years mirror the year folders in assets/gallery/
   test('has sections for past years', async ({ page }) => {
-    await expect(page.getByRole('heading', { name: /NoWo 2025/i })).toBeVisible();
-    await expect(page.getByRole('heading', { name: /NoWo 2024/i })).toBeVisible();
-    await expect(page.getByRole('heading', { name: /NoWo 2023/i })).toBeVisible();
-    await expect(page.getByRole('heading', { name: /NoWo 2022/i })).toBeVisible();
-    await expect(page.getByRole('heading', { name: /NoWo 2021/i })).toBeVisible();
+    for (const year of ['2025', '2024', '2023', '2017', '2016', '2015', '2014']) {
+      await expect(page.getByRole('heading', { name: `NoWo ${year}` })).toBeVisible();
+    }
   });
 });

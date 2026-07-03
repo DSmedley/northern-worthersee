@@ -36,3 +36,6 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Unlighthouse reports (mise run check-lighthouse)
+/.unlighthouse/
