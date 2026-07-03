@@ -17,7 +17,7 @@
 
     {{ range $fileIndex, $file := resources.Match (printf "gallery/%s/**" $dirName) }}
       {{ if eq $file.MediaType.MainType "image" }}
-        {{ if eq $fileIndex 1 }}
+        {{ if eq $featureImage "" }}
           {{ $featureImage = $file.Name }}
         {{ end }}
         {{ if strings.HasPrefix (path.Base $file.Name) "feature" }}
