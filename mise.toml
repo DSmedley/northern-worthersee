@@ -13,8 +13,16 @@ lefthook = "1.11.13"
 lychee = "0.18.1"
 
 [tasks.setup]
-description = "Install git hooks via lefthook"
-run = "lefthook install"
+description = "Install npm dependencies, Playwright browsers, and git hooks"
+run = [
+  "npm install",
+  "npm run install:browsers",
+  "lefthook install",
+]
+
+[tasks.optimize-gallery]
+description = "Resize & re-encode gallery images to WebP in place (replacing the originals), detect duplicates, and write a report. Pass file paths to optimize a subset; with no args it processes the entire gallery."
+run = "node scripts/optimize-gallery.mjs"
 
 [tasks.check]
 description = "Run all validations (markdown, spelling, TOML)"

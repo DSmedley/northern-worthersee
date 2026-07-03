@@ -10,3 +10,9 @@ pre-commit:
       skip:
         - merge
         - rebase
+    optimize-gallery:
+      glob: "assets/gallery/**/*.{jpg,jpeg,png,gif,webp,avif,tif,tiff}"
+      run: mise run optimize-gallery {staged_files} && git add assets/gallery
+      skip:
+        - merge
+        - rebase
