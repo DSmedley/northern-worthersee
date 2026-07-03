@@ -1,6 +1,6 @@
 ---
 description: "Join us in Frankenmuth, Michigan for Northern Wörthersee, the premier European car show in the northern United States, held each summer."
-images: ["img/home.jpg"]
+images: ["img/home.webp"]
 ---
 
 Set on the banks of the Cass River in the German town of Frankenmuth, MI, **Northern Wörthersee (NoWo)** is the premier VAG car event of the summer in the Northern United States. Debuting in 2013, NoWo pays tribute to European auto engineering and drivers alike.

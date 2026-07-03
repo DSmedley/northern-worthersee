@@ -1,8 +1,8 @@
 ---
 title: "Awards & Vehicle Classifications"
 description: "Find out how NoWo's vehicle classes and awards work, Every registered attendee can compete and vote for their favorite builds."
-featureimage: "img/awards.jpg"
-images: ["img/awards.jpg"]
+featureimage: "img/awards.webp"
+images: ["img/awards.webp"]
 ---
 
 All registered vehicles are eligible to compete for awards. **All registrants can cast votes** to determine the winners.

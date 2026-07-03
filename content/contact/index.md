@@ -1,8 +1,8 @@
 ---
 title: "Contact for Sponsorship & Inquiries"
 description: "Have a question about NoWo? Reach out to the team for sponsorship, vendor inquiries, or anything else. We'd love to hear from you."
-featureimage: "img/contact.jpg"
-images: ["img/contact.jpg"]
+featureimage: "img/contact.webp"
+images: ["img/contact.webp"]
 ---
 
 ## Get In Touch
