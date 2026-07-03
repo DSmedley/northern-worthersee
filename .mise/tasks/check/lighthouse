@@ -12,5 +12,19 @@ export PUPPETEER_EXECUTABLE_PATH="$CHROME"
 hugo server --port 1314 --disableFastRender > /dev/null 2>&1 &
 SERVER_PID=$!
 trap 'kill $SERVER_PID 2>/dev/null' EXIT
-until curl -sf http://localhost:1314 > /dev/null; do sleep 0.5; done
+# A cold image cache makes startup slow (hugo regenerates every gallery
+# thumbnail), so allow up to 5 minutes — but fail fast if the server dies.
+tries=0
+until curl -sf http://localhost:1314 > /dev/null; do
+  if ! kill -0 "$SERVER_PID" 2>/dev/null; then
+    echo "ERROR: hugo server exited before becoming ready" >&2
+    exit 1
+  fi
+  tries=$((tries + 1))
+  if [ "$tries" -ge 600 ]; then
+    echo "ERROR: hugo server did not become ready within 5 minutes" >&2
+    exit 1
+  fi
+  sleep 0.5
+done
 npx unlighthouse-ci --site http://localhost:1314 --disable-robots-txt

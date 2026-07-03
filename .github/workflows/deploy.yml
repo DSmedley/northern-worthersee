@@ -101,8 +101,18 @@ jobs:
       - name: Install Playwright Browsers
         run: npm run install:browsers
 
+      - name: Restore Hugo cache
+        uses: actions/cache/restore@v6
+        with:
+          path: ${{ runner.temp }}/hugo_cache
+          key: hugo-${{ github.run_id }}
+          restore-keys:
+            hugo-
+
       - name: Run Playwright tests
         run: npm run test:e2e
+        env:
+          HUGO_CACHEDIR: ${{ runner.temp }}/hugo_cache
 
       - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
@@ -111,16 +121,9 @@ jobs:
           path: playwright-report/
           retention-days: 30
 
-  # Lighthouse (mise run check:lighthouse) is intentionally local-only: its
-  # performance scores depend on machine load, which makes the budget flaky on
-  # shared CI runners. pa11y results are DOM-based and deterministic, so they
-  # do belong here.
   a11y:
     name: Accessibility
     runs-on: ubuntu-latest
-    # The site currently has known accessibility issues (theme-level); this
-    # job is non-blocking until they are fixed — then remove continue-on-error.
-    continue-on-error: true
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -138,8 +141,28 @@ jobs:
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
+      - name: Restore Hugo cache
+        uses: actions/cache/restore@v6
+        with:
+          path: ${{ runner.temp }}/hugo_cache
+          key: hugo-${{ github.run_id }}
+          restore-keys:
+            hugo-
+
       - name: Run accessibility checks
+        # The site currently has known accessibility issues (theme-level); this
+        # job is non-blocking until they are fixed — then remove continue-on-error.
+        continue-on-error: true
         run: mise run check:a11y
+        env:
+          HUGO_CACHEDIR: ${{ runner.temp }}/hugo_cache
+
+      - uses: actions/upload-artifact@v7
+        if: ${{ !cancelled() }}
+        with:
+          name: pa11y-report
+          path: .pa11y-report/
+          retention-days: 30
 
   deploy:
     name: Deploy to GitHub Pages

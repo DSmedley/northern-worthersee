@@ -59,5 +59,6 @@ export default defineConfig({
     command: 'hugo server --port 1313',
     url: 'http://localhost:1313',
     reuseExistingServer: !process.env.CI,
+    timeout: 180_000,
   },
 });
