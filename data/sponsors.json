@@ -2,75 +2,90 @@
   {
     "name": "Air Lift Performance",
     "link": "https://www.airliftperformance.com",
-    "image": "airlift-performance.svg"
+    "image": "airlift-performance.svg",
+    "homepage": true
   },
   {
     "name": "APR",
     "link": "https://www.goapr.com/",
-    "image": "apr.webp"
+    "image": "apr.webp",
+    "homepage": false
   },
   {
     "name": "Steve's European Auto",
     "link": "https://www.steveseuropeanauto.com/",
-    "image": "steves-european-automotive.webp"
+    "image": "steves-european-automotive.webp",
+    "homepage": true
   },
   {
     "name": "Axel Automotive",
     "link": "https://www.axelsautomotive.com/",
-    "image": "axels-automotive-text.gif"
+    "image": "axels-automotive-text.webp",
+    "homepage": true
   },
   {
     "name": "Common Stance",
     "link": "https://www.facebook.com/Commonstance/",
-    "image": "common-stance.webp"
+    "image": "common-stance.webp",
+    "homepage": false
   },
   {
     "name": "Coolwater VW Club",
     "link": "https://www.coolwatervwclub.com/",
-    "image": "coolwater-vw-audi-logo.webp"
+    "image": "coolwater-vw-audi-logo.webp",
+    "homepage": false
   },
   {
     "name": "Dynamic+",
     "link": "https://www.034motorsport.com/dynamic-plus-performance-software-audi-volkswagen-tuning/",
-    "image": "dynamic-plus.webp"
+    "image": "dynamic-plus.webp",
+    "homepage": false
   },
   {
     "name": "Eurotic Detroit",
     "link": "https://www.facebook.com/EUROTICDETROIT313/",
-    "image": "eurotic-detroit.webp"
+    "image": "eurotic-detroit.webp",
+    "homepage": false
   },
   {
     "name": "Fraser Coatings",
     "link": "https://www.frasercoatings.com/",
-    "image": "fraser-coatings.webp"
+    "image": "fraser-coatings.webp",
+    "homepage": false
   },
   {
     "name": "German Plate Guy",
     "link": "https://www.germanplateguy.com/",
-    "image": "german-plate-guy.webp"
+    "image": "german-plate-guy.webp",
+    "homepage": true
   },
   {
     "name": "Munks",
     "link": "https://www.munks.com/",
-    "image": "munks.webp"
+    "image": "munks.webp",
+    "homepage": true
   },
   {
     "name": "Stanced Dynamics",
     "link": "https://www.instagram.com/stancedynamics/",
-    "image": "stanced-dynamics.webp"
+    "image": "stanced-dynamics.webp",
+    "homepage": false
   },
   {
     "name": "URO Tuning",
     "link": "https://www.urotuning.com/",
-    "image": "urotuning.webp"
+    "image": "urotuning.webp",
+    "homepage": false
   },
   {
     "name": "034 Motorsport",
     "link": "https://www.034motorsport.com/",
-    "image": "034-motorsport.webp"
+    "image": "034-motorsport.webp",
+    "homepage": false
   },
   {
     "name": "Detroit Vintage Werkshop",
-    "image": "detroit-vintage-werkshop.webp"
+    "image": "detroit-vintage-werkshop.webp",
+    "homepage": false
   }
 ]

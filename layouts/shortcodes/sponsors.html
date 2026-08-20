@@ -1,18 +1,25 @@
-<div class="grid sponsors-grid gap-4 mt-6 mb-6">
+{{ $isHomepage := eq (.Get "homepage") "true" }}
+{{ $sponsorList := hugo.Data.sponsors }}
+{{ if $isHomepage }}
+{{ $sponsorList = where $sponsorList "homepage" true }}
+{{ end }}
 
-  {{ range hugo.Data.sponsors }}
+<div class="grid {{ if $isHomepage }} sponsors-grid-homepage{{ else }} sponsors-grid{{ end }} gap-4 mt-6 mb-6">
+
+  {{ range $sponsorList }}
   {{ $image := resources.Get (printf "sponsors/%s" .image) }}
 
   {{ if .link }}
   <a href="{{ .link }}" target="_blank" rel="noopener noreferrer"
-    class="flex items-center justify-center p-5 sponsor-card border border-solid rounded-lg no-underline">
+    class="flex items-center justify-center border border-solid rounded-lg no-underline p-5{{ if $isHomepage }} sponsor-card-homepage{{ else }} sponsor-card{{ end }}">
     {{ else }}
     <div
-      class="flex items-center justify-center p-5 sponsor-card border border-solid rounded-lg no-underline">
+      class="flex items-center justify-center border border-solid rounded-lg no-underline p-5{{ if $isHomepage }} sponsor-card-homepage{{ else }} sponsor-card{{ end }}">
       {{ end }}
 
       {{ if $image }}
-      <img src="{{ $image.RelPermalink }}" alt="{{ .name }}" class="not-prose max-w-full h-auto">
+      <img src="{{ $image.RelPermalink }}" alt="{{ .name }}"
+        class="not-prose max-w-full h-auto">
       {{ else }}
       <span class="font-semibold ">{{ .name }}</span>
       {{ end }}

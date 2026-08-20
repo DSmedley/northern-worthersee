@@ -16,3 +16,13 @@ Whether you're looking to show off your ride, enjoy the surroundings, or simply 
 
 <!-- markdownlint-disable-next-line MD036 -->
 **NoWo {{< eventyear >}} · {{< eventdate >}} · Kern Pavilion, Frankenmuth, MI**
+
+---
+
+## Our Sponsors
+
+{{< sponsors homepage="true" >}}
+
+{{< button href="/sponsors/" type="outline" >}}
+See all sponsors →
+{{< /button >}}

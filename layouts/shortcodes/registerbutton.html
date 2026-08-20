@@ -1,8 +1,8 @@
 {{ $event := hugo.Data.event }}
-<a
-  class="!rounded-md bg-primary-600 px-4 py-2 !text-neutral !no-underline hover:!bg-primary-500 dark:bg-primary-800 dark:hover:!bg-primary-700"
-  href="{{ $event.registrationUrl }}"
-  target="_blank"
-  rel="noopener noreferrer">
-  {{ with .Get "text" }}{{ . }}{{ else }}Register Your Vehicle{{ end }}
-</a>
+{{ $text := .Get "text" | default "Register Your Vehicle" }}
+{{ partial "button.html" (dict
+  "href" (.Get "href" | default $event.registrationUrl)
+  "type" (.Get "type" | default "default")
+  "blank" true
+  "text" $text
+) }}

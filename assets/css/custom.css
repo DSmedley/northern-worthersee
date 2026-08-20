@@ -7,6 +7,15 @@
   border-color: rgba(255, 255, 255, 0.1);
 }
 
+.sponsors-grid-homepage {
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+}
+
+.sponsor-card-homepage {
+  background: rgba(255, 255, 255, 0.45);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
 .article-content {
   max-width: 100%;
 }

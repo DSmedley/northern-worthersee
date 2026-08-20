@@ -1,0 +1,17 @@
+{{- $href := .href -}}
+{{- $type := .type | default "default" -}}
+{{- $blank := .blank | default false -}}
+{{- $text := .text -}}
+{{- $variant := "bg-primary-600 hover:!bg-primary-500 dark:bg-primary-800 dark:hover:!bg-primary-700" -}}
+{{- if eq $type "outline" -}}
+  {{- $variant = "bg-transparent border hover:!bg-primary-500 hover:!bg-opacity-75" -}}
+{{- end -}}
+<a
+  class="!rounded-md px-4 py-2 !text-neutral !no-underline {{ $variant }}"
+  href="{{ $href }}"
+  {{- if $blank }}
+  target="_blank"
+  rel="noopener noreferrer"
+  {{- end }}>
+  {{ $text }}
+</a>
