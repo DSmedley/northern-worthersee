@@ -23,6 +23,6 @@ Whether you're looking to show off your ride, enjoy the surroundings, or simply 
 
 {{< sponsors homepage="true" >}}
 
-{{< button href="/sponsors/" type="outline" >}}
+{{< button pageRef="sponsors" type="outline" >}}
 See all sponsors →
 {{< /button >}}

@@ -1,4 +1,9 @@
-{{- $href := .href -}}
+{{- $href := "" -}}
+{{- with .pageRef -}}
+  {{- $href = relref $.page . -}}
+{{- else -}}
+  {{- $href = .href -}}
+{{- end -}}
 {{- $type := .type | default "default" -}}
 {{- $blank := .blank | default false -}}
 {{- $text := .text -}}

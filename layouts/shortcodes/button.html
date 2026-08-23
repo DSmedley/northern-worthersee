@@ -1,4 +1,6 @@
 {{ partial "button.html" (dict
+  "page" .Page
+  "pageRef" (.Get "pageRef")
   "href" (.Get "href")
   "type" (.Get "type" | default "default")
   "blank" (eq (.Get "blank") "true")

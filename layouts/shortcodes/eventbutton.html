@@ -2,7 +2,9 @@
 {{ $eventDate = $eventDate.Format "2006" }}
 {{ $text := .Get "text" | default (printf "%s Event Details" $eventDate) }}
 {{ partial "button.html" (dict
-  "href" (.Get "href" | default "/event/")
+  "page" .Page
+  "pageRef" (.Get "pageRef" | default "event")
+  "href" (.Get "href")
   "type" (.Get "type" | default "outline")
   "blank" false
   "text" $text
